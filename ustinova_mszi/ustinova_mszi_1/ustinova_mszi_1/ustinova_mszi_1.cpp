@@ -23,20 +23,17 @@ void coding(std::string input_file, std::string output_file, int action) {
             cout << "Невозможно открыть файл.\n";
         else
             while (fin.get(letter)) {
-                int i;
+               
                 if (action == 1) {
-                    
                     coded_letter = letter + keyword_letter_code;
                     fout << coded_letter;
                 }
                 else {
-                    coded_letter = letter -keyword_letter_code;
+                    coded_letter = letter - keyword_letter_code;
                     fout << coded_letter;
-                   
                 }
                 keyword_letter_code++;
                 if (keyword_letter_code > keyword.size()) keyword_letter_code = 0;
-
             }
         fin.close();
         fout.close();
