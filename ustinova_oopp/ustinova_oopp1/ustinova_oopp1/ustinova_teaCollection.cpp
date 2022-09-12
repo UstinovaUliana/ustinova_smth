@@ -1,18 +1,4 @@
 #include "ustinova_teaCollection.h"
-using namespace std;
-void ustinova_teaCollection::add_tea()
-{
-	//auto tea = make_shared<ustinova_tea>();
-	//tea.c_in()
-	//ustinova_tea* ukaz = new ustinova_tea;
-	//ukaz->c_in();
-	//ukazateli.push_back(tea.get());
-	//ustinova_tea tea;
-	//tea.c_in();
-	ustinova_tea* ukaz = new ustinova_tea;
-	(*ukaz).c_in();
-	ukazateli.push_back(ukaz);
-}
 
 ustinova_teaCollection::ustinova_teaCollection()
 {
@@ -21,36 +7,61 @@ ustinova_teaCollection::ustinova_teaCollection()
 
 ustinova_teaCollection::~ustinova_teaCollection()
 {
+	clear();
+}
+
+void ustinova_teaCollection::add_tea(bool is_favourite)
+{
+	//auto tea = make_shared<ustinova_tea>();
+	//tea.c_in()
+	//ustinova_tea* ukaz = new ustinova_tea;
+	//ukaz->c_in();
+	//ukazateli.push_back(tea.get());
+	//ustinova_tea tea;
+	//tea.c_in();
+	shared_ptr<ustinova_tea> ukaz;
+	if (is_favourite) ukaz = make_shared<ustinova_favouriteTea>();
+	else ukaz = make_shared<ustinova_tea>();
+	(*ukaz).c_in();
+	ukazateli.push_back(ukaz);
 }
 
 void ustinova_teaCollection::c_out()
 {
 	cout << endl;
-	    for (int i = 0; i < ukazateli.size(); i++)
-	        (*ukazateli[i]).c_out();
-	/*for (auto i = ukazateli.begin(); i < ukazateli.end(); i++)
-		(*i)->c_out()*/;
+	  /*  for (int i = 0; i < ukazateli.size(); i++)
+	(*ukazateli[i]).c_out();*/
+
+	for (auto i = ukazateli.begin(); i < ukazateli.end(); ++i)
+		(*i)->c_out();
 }
-void ustinova_teaCollection::f_in(std::ifstream& fin) {
-	int size;
-	    fin >> size;
+void ustinova_teaCollection::f_in() {
+		ukazateli.clear();
+		CFile file((TCHAR*)"file.dat", CFile::modeRead);
+		CArchive arch(&file, CArchive::load);
+		int size;
+	    arch >> size;
 		for (int i = 0; i < size; i++) {
-			ustinova_tea* ukaz=new ustinova_tea;
-			(*ukaz).f_in(fin);
-			ukazateli.push_back(ukaz);
+			ustinova_tea* ukaz = new ustinova_tea;
+			arch >> ukaz;
+			shared_ptr<ustinova_tea> shared_ukaz(ukaz);
+			ukazateli.push_back(shared_ukaz);
 		}
+
+		arch.Close();
+		file.Close();
 }
-void ustinova_teaCollection::f_out(std::ofstream& fout) {
-	fout << endl;
-	    fout << ukazateli.size() << endl;
-	    for (int i = 0; i <ukazateli.size(); i++)
-			(*ukazateli[i]).f_out(fout);
-	
+void ustinova_teaCollection::f_out() {
+	CFile file((TCHAR*)"file.dat", CFile::modeCreate | CFile::modeWrite);
+	CArchive arch(&file, CArchive::store);
+	   arch << ukazateli.size();
+	   for (auto ukaz : ukazateli)  arch << ukaz.get();
+	   arch.Close();
+	   file.Close();
 }
 void ustinova_teaCollection::clear()
 {
-	for (auto i = ukazateli.begin(); i < ukazateli.end(); i++)
-		delete (*i);
+	for (auto ukaz: ukazateli) *ukaz;
 	ukazateli.clear();
 }
 //
