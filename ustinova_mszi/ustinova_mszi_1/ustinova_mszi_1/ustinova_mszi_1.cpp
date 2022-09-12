@@ -78,7 +78,7 @@ int main()
             break;
         }
         default: {
-            std::cout << "\nТакой операции нет.\n\n";
+            cout << "\nТакой операции нет.\n\n";
             break;
         }
         }
