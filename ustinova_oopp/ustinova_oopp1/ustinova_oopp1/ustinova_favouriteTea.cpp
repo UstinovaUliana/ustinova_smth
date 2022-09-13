@@ -10,13 +10,13 @@ IMPLEMENT_SERIAL(ustinova_favouriteTea, ustinova_tea, 1);
 
 void ustinova_favouriteTea::c_in() {
 	ustinova_tea::c_in();
-	std::cout << "\nВведите вашу оценку: ";
+	std::cout << "Введите вашу оценку: ";
 	std::cin >> personal_rate;
 }
 
 void ustinova_favouriteTea::c_out() {
 	ustinova_tea::c_out();
-	std::cout << "\nВаша оценка : " << personal_rate;
+	std::cout << "Ваша оценка : " << personal_rate<<"\n";
 }
 
 void ustinova_favouriteTea::Serialize(CArchive& arch) {

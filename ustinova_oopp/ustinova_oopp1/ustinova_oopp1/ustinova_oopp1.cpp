@@ -39,14 +39,14 @@ int main()
             string ifileName;
             cin >> ws;
             getline(cin, ifileName);
-            fin.open(ifileName, ios::in);
-            if (fin.is_open())
-            {
-                collection.f_in();
-                fin.close();
+         /*   fin.open(ifileName, ios::in);*/
+           /* if (fin.is_open())
+            {*/
+                collection.f_in(ifileName);
+              /*  fin.close();*/
                 cout << "Загружено!" << endl;
-            }
-            else cout << "Файл не открывается." << endl;
+          /*  }*//*
+            else cout << "Файл не открывается." << endl;*/
             break;
         }
         case 4: {
@@ -55,14 +55,14 @@ int main()
             string ofileName;
             cin >> ws;
             getline(cin, ofileName);
-            fout.open(ofileName, ios::out);
+          /*  fout.open(ofileName, ios::out);*/
 
-            if (fout.is_open()) {
-                collection.f_out();
-                fout.close();
+          /*  if (fout.is_open()) {*/
+                collection.f_out(ofileName);/*
+                fout.close();*/
                 cout << "Сохранено!" << endl;
-            }
-            else cout << "Файл не открывается." << endl;
+           /* }*//*
+            else cout << "Файл не открывается." << endl;*/
             break;
         }
 

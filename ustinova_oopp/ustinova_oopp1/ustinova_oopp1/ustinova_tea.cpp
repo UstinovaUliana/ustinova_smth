@@ -40,8 +40,8 @@ void ustinova_tea::c_in()
 void ustinova_tea::c_out()
 {
 		cout << endl;
-	    cout << "Чай" << endl << "Название: " << name << endl << "Страна-производитель: " << country_from << endl
-	        << "Компания-производитель: " << company<< endl << "Сорт: " << sort << endl << "Цена: " << price
+	    cout << "Чай" << endl << "Название: " << (LPCTSTR)name << endl << "Страна-производитель: " << (LPCTSTR)country_from << endl
+	        << "Компания-производитель: " << (LPCTSTR)company << endl << "Сорт: " << (LPCTSTR)sort << endl << "Цена: " << price
 	        << endl << "Пользовательская оценка: " << rate << endl;
 }
 

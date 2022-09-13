@@ -11,8 +11,8 @@ public:
 	ustinova_teaCollection();
 	~ustinova_teaCollection();
 	void c_out();
-	void f_in();
-	void f_out();
+	void f_in(string file_name);
+	void f_out(string file_name);
 	void clear();
 	void add_tea(bool is_favourite);
 	//friend std::ostream& operator<< (std::ostream& out, const ustinova_teaCollection& collection);

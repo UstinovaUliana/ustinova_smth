@@ -35,12 +35,13 @@ void ustinova_teaCollection::c_out()
 	for (auto i = ukazateli.begin(); i < ukazateli.end(); ++i)
 		(*i)->c_out();
 }
-void ustinova_teaCollection::f_in() {
+void ustinova_teaCollection::f_in(string file_name) {
 		ukazateli.clear();
-		CFile file((TCHAR*)"file.dat", CFile::modeRead);
+		CFile file((LPCTSTR)(file_name.c_str()), CFile::modeRead);
 		CArchive arch(&file, CArchive::load);
-		int size;
+		int size,n;
 	    arch >> size;
+		arch >> n;
 		for (int i = 0; i < size; i++) {
 			ustinova_tea* ukaz = new ustinova_tea;
 			arch >> ukaz;
@@ -51,8 +52,8 @@ void ustinova_teaCollection::f_in() {
 		arch.Close();
 		file.Close();
 }
-void ustinova_teaCollection::f_out() {
-	CFile file((TCHAR*)"file.dat", CFile::modeCreate | CFile::modeWrite);
+void ustinova_teaCollection::f_out(string file_name) {
+	CFile file((LPCTSTR)(file_name.c_str()), CFile::modeCreate | CFile::modeWrite);
 	CArchive arch(&file, CArchive::store);
 	   arch << ukazateli.size();
 	   for (auto ukaz : ukazateli)  arch << ukaz.get();
