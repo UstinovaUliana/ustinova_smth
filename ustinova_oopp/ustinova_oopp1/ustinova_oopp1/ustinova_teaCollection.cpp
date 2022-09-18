@@ -41,7 +41,7 @@ void ustinova_teaCollection::f_in(string file_name) {
 		CArchive arch(&file, CArchive::load);
 		int size,n;
 	    arch >> size;
-		arch >> n;
+		//arch >> n;
 		for (int i = 0; i < size; i++) {
 			ustinova_tea* ukaz = new ustinova_tea;
 			arch >> ukaz;

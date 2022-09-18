@@ -17,11 +17,11 @@ void ustinova_tea::c_in()
 			        cout << "Введите название чая:";
 		        getline(cin >> ws, sname);
 
-		        cout << "Введите назвавние страны-производителя: ";
+		   /*     cout << "Введите назвавние страны-производителя: ";
 		        getline(cin >> ws, scountry_from);
 		   
 		        cout << "Введите назвавние компании-производителя: ";
-		        getline(cin >> ws, scompany);
+		        getline(cin >> ws, scompany);*/
 	
 		        cout << "Введите сорт чая: ";
 		        getline(cin >> ws, ssort);
@@ -40,19 +40,21 @@ void ustinova_tea::c_in()
 void ustinova_tea::c_out()
 {
 		cout << endl;
-	    cout << "Чай" << endl << "Название: " << (LPCTSTR)name << endl << "Страна-производитель: " << (LPCTSTR)country_from << endl
-	        << "Компания-производитель: " << (LPCTSTR)company << endl << "Сорт: " << (LPCTSTR)sort << endl << "Цена: " << price
-	        << endl << "Пользовательская оценка: " << rate << endl;
+	    cout << "Чай" << endl << "Название: " << (LPCTSTR)name << "; " 
+			//<< "Страна-производитель: " << (LPCTSTR)country_from << "; "   << "Компания-производитель: " << (LPCTSTR)company << "; "
+			<< "Сорт: " << (LPCTSTR)sort << "; "  << "Цена: " << price  << "; "  << "Пользовательская оценка: " << rate << endl;
 }
 
 void ustinova_tea::Serialize(CArchive& file) {
 	if (file.IsStoring()) {
-		file << name  << country_from 
-					        << company  << sort  << price
-					         << rate ;
+		file << name 
+			//<< country_from  << company  
+			<< sort  << price      << rate ;
 	}
 	else {
-		file >> name >> country_from >> company >> sort >> price >> rate;
+		file >> name 
+			//>> country_from >> company 
+			>> sort >> price >> rate;
 	}
 }
 
