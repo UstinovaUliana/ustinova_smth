@@ -5,22 +5,68 @@
 #include <algorithm> 
 #include <set>
 using namespace std;
+void mostfreq(vector<char> text) {
+	multimap<char, int> lettersCodes;
+	multimap<char, int> ::iterator it;
+	multimap<char, int> lettersFreqs;
+	/*multimap <char, int> mostFreq;
+	set<int, char> freqSet;*/
+	int freq;
+	for (auto i : text)
+		lettersCodes.insert(pair<char, int>(i, (int)i));
+	for (int i = 0; i <= 255; i++) {
+		freq = lettersCodes.count(i);
+		if (freq != 0)
+			lettersFreqs.insert(pair<char, int>(i, freq));
+	}
+	sort(lettersFreqs.begin(), lettersFreqs.end(), [](const pair<char, float>& p1, const pair<char, float>& p2) {return p1.second < p2.second; });
+	int i = 1;
+	for (it = lettersFreqs.begin(); i < 6; i++, it++) cout << "Символ: " << it->first << "Частота: " << it->second << "\n";
+}
+float index_sootv(vector<char> text) {
+	multimap<char, int> lettersCodes;
+	multimap<char, int> ::iterator it;
+	multimap<char, int> lettersFreqs;
+	/*multimap <char, int> mostFreq;
+	set<int, char> freqSet;*/
+	int freq;
+	for (auto i : text)
+		lettersCodes.insert(pair<char, int>(i, (int)i));
+	for (int i = 0; i <= 255; i++) {
+		freq = lettersCodes.count(i);
+		if (freq != 0)
+			lettersFreqs.insert(pair<char, int>(i, freq));
+	}
+	//for (it = lettersFreqs.begin(); it != lettersFreqs.end(); it++) {
+	//	/*if (it.second() > maxfreq)
+	//	{
+	//		maxFreq =
+	//	}*/
+	//	freqSet.emplace(it->second, it->first);
+	//}
+	
+	// it = lettersCodes.begin(); it != lettersCodes.end(); it++
 
-void decoding() {
-	// ifstream in("file.txt", ios::binary);
-	// vector<char> v((istreambuf_iterator<char>(in)), istreambuf_iterator<char>());
-	map<char, float> etChastoty;
+	float index;
+	int N = text.size();
+	for (auto fi : lettersFreqs) {
+		index += fi.second * (fi.second - 1);
+		}
+	return index/(N * (N - 1));
+}
+void etalon_analysis() {
+	//map<char, float> etChastoty;
 
-	float frequency;
+	//float frequency;
 	string etFileName;
-	multimap<char, int> etLetters;
+	
 
 	cout << "Введите название файла с эталонным текстом: \n";
 	cin >> etFileName;
 	ifstream fin(etFileName, ios::binary);
 	vector<char> etText((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>()); //эталонный текст
 	fin.close();
-	
+
 
 	//for (auto letter : etText) {
 	//	if (etChastoty.find(letter)!= etChastoty.end()) {
@@ -32,15 +78,13 @@ void decoding() {
 	//		
 	//	}
 	//}
-	for (auto i : etText)
-		etLetters.insert(pair<char, int>(i, (int)i));
-
-	int x1 = etLetters.size();
-	for (int i = 0; i <= 255; i++) {
-		frequency = etLetters.count(i);
-		if (frequency != 0)
-			etChastoty.insert(pair<char, float>(i, frequency));
-	}
+	
+	
+}
+void decoding() {
+	// ifstream in("file.txt", ios::binary);
+	// vector<char> v((istreambuf_iterator<char>(in)), istreambuf_iterator<char>());
+	
 
 	/*sort(etChastoty.begin(), etChastoty.end());
 	int i = 0;
@@ -59,7 +103,7 @@ void decoding() {
 
 	int keySize, j;
 	string codedFileName, outFileName;
-	
+	//
 	char s;
 	multimap<char, int> table;
 	map<char, float> codedChastoty; //анализ группы зашифрованного текста
@@ -162,43 +206,22 @@ int main()
 {
 
 	setlocale(LC_ALL, "Russian");
-	/*while (true) {
-		cout << "1. Выбрать эталонный текст\n";
-		cout << "2. Дешифровать текст\n";
+	
+	while (true) {
+		cout << "1. Анализ эталонного текста\n2. Анализ зашифрованного текста и дешифровка\n";
 		cout << "0. Выход из программы\n";
 		int com;
 		cin >> com;
 		switch (com) {
 		case 1: {
-			v = analyze(analyze_ref);
+		//	etalon_analysis();
 			break;
 		}
 		case 2: {
-			if (v.size() == 0) {
-				cout << "Отсутствует анализ текста!\n";
-				break;
-			}
-			decryption(v, analyze_ref);
+			//decoding();
 			break;
 		}
-		case 3:
-			return 0;
-		}
-		default: {
-
-
-		}
-	}*/
-	while (true) {
-		cout << "1. дешифровка\n";
-		cout << "0. Выход из программы\n";
-		int com;
-		cin >> com;
-		switch (com) {
-		case 1: {
-			decoding();
-			break;
-		}
+			 
 		case 0: {
 			return 0;
 			break;
