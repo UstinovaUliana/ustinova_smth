@@ -1,16 +1,16 @@
 ﻿#include <iostream>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <fstream>
 #include <algorithm> 
 #include <set>
 using namespace std;
-void mostfreq(vector<char> text) {
+
+unordered_map<char, int> freq(vector<char> text) {
 	multimap<char, int> lettersCodes;
 	multimap<char, int> ::iterator it;
-	multimap<char, int> lettersFreqs;
-	/*multimap <char, int> mostFreq;
-	set<int, char> freqSet;*/
+	map<char, int> lettersFreqs;
 	int freq;
 	for (auto i : text)
 		lettersCodes.insert(pair<char, int>(i, (int)i));
@@ -19,16 +19,24 @@ void mostfreq(vector<char> text) {
 		if (freq != 0)
 			lettersFreqs.insert(pair<char, int>(i, freq));
 	}
-	sort(lettersFreqs.begin(), lettersFreqs.end(), [](const pair<char, float>& p1, const pair<char, float>& p2) {return p1.second < p2.second; });
-	int i = 1;
-	for (it = lettersFreqs.begin(); i < 6; i++, it++) cout << "Символ: " << it->first << "Частота: " << it->second << "\n";
+	auto comp = [](const pair<char, int>& p1, const pair<char, int>& p2) {
+		return p1.second > p2.second;
+	};
+	vector <int> f;
+	multimap<int, char>sorted;
+	unordered_map <char, int> lettersFreqs1;
+	/*sort(lettersFreqs.begin(), lettersFreqs.end(), comp);*/
+	for (auto i : lettersFreqs) f.push_back(i.second);
+	for (auto i : lettersFreqs) sorted.emplace(i.second, i.first);
+
+	//sort(f.begin(), f.end());
+	for (auto i:sorted) lettersFreqs1.emplace(i.second, i.first);
+	return lettersFreqs1;
 }
 float index_sootv(vector<char> text) {
 	multimap<char, int> lettersCodes;
 	multimap<char, int> ::iterator it;
-	multimap<char, int> lettersFreqs;
-	/*multimap <char, int> mostFreq;
-	set<int, char> freqSet;*/
+	map<char, int> lettersFreqs;
 	int freq;
 	for (auto i : text)
 		lettersCodes.insert(pair<char, int>(i, (int)i));
@@ -37,37 +45,28 @@ float index_sootv(vector<char> text) {
 		if (freq != 0)
 			lettersFreqs.insert(pair<char, int>(i, freq));
 	}
-	//for (it = lettersFreqs.begin(); it != lettersFreqs.end(); it++) {
-	//	/*if (it.second() > maxfreq)
-	//	{
-	//		maxFreq =
-	//	}*/
-	//	freqSet.emplace(it->second, it->first);
-	//}
-	
-	// it = lettersCodes.begin(); it != lettersCodes.end(); it++
 
-	float index;
+	float index=0;
 	int N = text.size();
-	for (auto fi : lettersFreqs) {
-		index += fi.second * (fi.second - 1);
-		}
+	for (auto fi : lettersFreqs) index += fi.second * (fi.second - 1);
+		
 	return index/(N * (N - 1));
 }
 void etalon_analysis() {
-	//map<char, float> etChastoty;
-
-	//float frequency;
 	string etFileName;
-	
-
 	cout << "Введите название файла с эталонным текстом: \n";
 	cin >> etFileName;
 	ifstream fin(etFileName, ios::binary);
 	vector<char> etText((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>()); //эталонный текст
 	fin.close();
 
-
+	unordered_map<char, int> lettersFreqs;
+	unordered_map<char, int> ::iterator it;
+	lettersFreqs=freq(etText);
+	int i = 1;
+	for (it = --lettersFreqs.end(); i < 6; i++, it--) cout << "Символ: " << it->first << "; Частота: " << it->second << "\n";
+	float is=index_sootv(etText);
+	cout << "Индекс соответствия: " << is << "\n";
 	//for (auto letter : etText) {
 	//	if (etChastoty.find(letter)!= etChastoty.end()) {
 	//		etLetters.emplace(letter, (int)letter);
@@ -82,120 +81,68 @@ void etalon_analysis() {
 	
 }
 void decoding() {
-	// ifstream in("file.txt", ios::binary);
-	// vector<char> v((istreambuf_iterator<char>(in)), istreambuf_iterator<char>());
-	
-
-	/*sort(etChastoty.begin(), etChastoty.end());
-	int i = 0;
-	for (map <char, float> ::iterator it = etChastoty.begin(); i < 6; i++, it++) cout << it->second << " : " << it->second <<"\n";*/
-	/*for (auto i : text)
-		letters.insert(pair<char, int>(i, (int)i));*/
-
-
-		/*for (int i = 0; i <= 255; i++) {
-			frequency = letters.count(i) / x;
-			if (frequency != 0)
-				chastoty.insert(pair<char, float>(i, frequency));
-		}*/
-
-		//return ref_text;
-
-	int keySize, j;
+	int keySize;
 	string codedFileName, outFileName;
 	//
-	char s;
-	multimap<char, int> table;
-	map<char, float> codedChastoty; //анализ группы зашифрованного текста
-	vector<char> sym_in_groups; //символы в группах
-	vector<int> keyword; //смещение
+	char decoded_letter;
+	//map<char, float> codedChastoty; //анализ группы зашифрованного текста
+	//vector<char> sym_in_groups; //символы в группах
+	//vector<int> keyword; //смещение
 
 	cout << "Введите название файла с зашифрованным текстом\n";
 	cin >> codedFileName;
 	ifstream fin1(codedFileName, ios::binary);
 	vector<char> codedText((istreambuf_iterator<char>(fin1)), istreambuf_iterator<char>()); //зашифрованный текст
-	fin.close();
+	fin1.close();
 
-	//m(n - 1)is* L = L * summ(pi ^ 2)(n - m) + n(m - 1)
-	//	m(n - 1)is * L + L * summ(pi ^ 2) * m - nm = L * summ(pi ^ 2) * n - n
-	//	m((n - 1) * is * L + L * summ(pi ^ 2) - n) = n(L * summ(pi ^ 2) - 1)
-	//	m = (n * (L * summ(pi ^ 2) - 1)) / ((n - 1) * is * L + L * summ(pi ^ 2) - n)
-	int N = codedText.size();
-	//sort(text.begin(), text.end());
-	int L = 256;
-	/*for (auto i : codedText)
-		table.insert(pair<char, int>(i, (int)i));
-
-	*/
-	//for (int i = 0; i <= 255; i++) {
-	//	frequency = table.count(i);
-	//	if (frequency != 0)
-	//		codedChastoty.insert(pair<char, float>(i, frequency));
-	//}
-	//float is=0;
-	//for (auto fi : codedChastoty) {
-	//	is += fi.second * (fi.second - 1) / (N * (N - 1));
-	//}
-	////is = is / (N * (N - 1));
-	//cout << is<<endl;
-	//float A=0;
-	//for (auto fi : codedChastoty) {
-	//	A += fi.second * fi.second / (N * N);
-	//}
-	//keySize = (N * (L * A - 1)) / ((N - 1) * is * L + L * A - N);
-	//cout << keySize<<endl;
-	keySize = 10;
-	/*cout << "Введите длину ключа\n";
-	cin >> keySize*/;
-	int letterPos = keySize;
-	/*codedChastoty.clear();
-	table.clear();*/
-	
-	map<char, float> etChastoty1;
-	vector<char> sym_in_groups1; //символы в группах
-	for (int i = 0; i < keySize; i++) {
-		for (int j = keySize - letterPos; j < codedText.size(); j += keySize) {
-			s = codedText.at(j);
-			sym_in_groups.push_back(s);
+	vector <char> group;
+	float maxIndex = 0;
+	int expKeySize=1;
+	vector<float> is;
+	for (int keySize = 2; keySize <= 25; keySize++) {
+		for (int j = 0; j < codedText.size(); j+=keySize)
+		{
+			group.push_back(codedText.at(j));
 		}
-		for (auto j : sym_in_groups)
-			table.insert(pair<char, int>(j, (int)j));
-		for (int j = 0; j <= 255; j++) {
-			frequency = table.count(j);
-			if (frequency != 0)
-				codedChastoty.insert(pair<char, float>(j, frequency));
+		float isi = index_sootv(group);
+		is.push_back(isi);
+		cout << "Длина ключа: " << keySize << "; Индекс соответствия: " << isi << "\n";
+		if (isi > maxIndex) {
+			maxIndex = isi;
+			expKeySize = keySize;
 		}
-		sym_in_groups.clear();
-		table.clear();
-		for (int j = keySize - letterPos; j < etText.size(); j += keySize) {
-			s = etText.at(j);
-			sym_in_groups.push_back(s);
-		}
-		for (auto j : sym_in_groups)
-			table.insert(pair<char, int>(j, (int)j));
-		for (int j = 0; j <= 255; j++) {
-			frequency = table.count(j);
-			if (frequency != 0)
-				etChastoty1.insert(pair<char, float>(j, frequency));
-		}
-		auto maxCodedInGroup = max_element(codedChastoty.begin(), codedChastoty.end(), [](const pair<char, float>& p1, const pair<char, float>& p2) {return p1.second < p2.second; });
-		auto maxInGroup = max_element(etChastoty1.begin(), etChastoty1.end(), [](const pair<char, float>& p1, const pair<char, float>& p2) {return p1.second < p2.second; });
-		keyword.push_back(maxCodedInGroup->first - maxInGroup->first);
-		cout << char(keyword[i]);
-		letterPos--;
-		sym_in_groups.clear();
-		codedChastoty.clear();
-		etChastoty1.clear();
-		table.clear();
+		group.clear();
 	}
+	cout << "Предполагаемая длина ключа: " << expKeySize <<"\n";
+	
+
+	unordered_map<char, int> groupFreqs;
+	int trueKeySize;
+	vector<char>keyword;
+	cout << "Введите истиную длину ключа: ";
+	cin >> trueKeySize;
+	for (int i = 0; i < trueKeySize;i++) {
+		for (int j = i; j < codedText.size(); j += trueKeySize)
+		{
+			group.push_back(codedText.at(j));
+		}
+		groupFreqs = freq(group);
+		auto s = --groupFreqs.end();
+		const char p = ' ';
+		keyword.push_back(s->first - p);
+		group.clear();
+	}
+	cout << "Ключ: ";
+	for (auto i : keyword) cout << i;
+	cout << "\n";
 
 	cout << "Введите название файла, куда сохранить расшифрованный текст: \n";
 	cin >> outFileName;
-	letterPos = 0;
+	int letterPos = 0;
 	ofstream fout(outFileName, ios::binary);
-	for (auto j : codedText) {
-		s = j - char(keyword[letterPos % keySize]);
-		fout << s;
+	for (auto codedLetter : codedText) {
+		decoded_letter = codedLetter - char(keyword[letterPos % trueKeySize]);
+		fout << decoded_letter;
 		letterPos++;
 	}
 	fout.close();
@@ -214,11 +161,13 @@ int main()
 		cin >> com;
 		switch (com) {
 		case 1: {
-		//	etalon_analysis();
+			etalon_analysis();
+			
 			break;
 		}
 		case 2: {
-			//decoding();
+			decoding();
+
 			break;
 		}
 			 
