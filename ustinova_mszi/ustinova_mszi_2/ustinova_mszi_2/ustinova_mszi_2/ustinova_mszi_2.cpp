@@ -5,9 +5,10 @@
 #include <fstream>
 #include <algorithm> 
 #include <set>
+#include <string>
 using namespace std;
 
-unordered_map<char, int> freq(vector<char> text) {
+vector<pair<char, int>> freq(vector<char> text) {
 	multimap<char, int> lettersCodes;
 	multimap<char, int> ::iterator it;
 	map<char, int> lettersFreqs;
@@ -26,12 +27,21 @@ unordered_map<char, int> freq(vector<char> text) {
 	multimap<int, char>sorted;
 	unordered_map <char, int> lettersFreqs1;
 	/*sort(lettersFreqs.begin(), lettersFreqs.end(), comp);*/
-	for (auto i : lettersFreqs) f.push_back(i.second);
+	//for (auto i : lettersFreqs) f.push_back(i.second);
 	for (auto i : lettersFreqs) sorted.emplace(i.second, i.first);
 
 	//sort(f.begin(), f.end());
-	for (auto i:sorted) lettersFreqs1.emplace(i.second, i.first);
-	return lettersFreqs1;
+	//for (auto i:sorted) lettersFreqs1.emplace(i.second, i.first);
+	auto start = 0;
+	vector<pair<char, int>> aw;
+	for (auto it=sorted.rbegin(); it!= sorted.rend(); it++) {
+		lettersFreqs1.emplace(it->second, it->first);
+		start++;
+		aw.push_back(make_pair(it->second, it->first));
+		if (start==5) return aw;
+	}
+	
+	
 }
 float index_sootv(vector<char> text) {
 	multimap<char, int> lettersCodes;
@@ -60,11 +70,11 @@ void etalon_analysis() {
 	vector<char> etText((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>()); //эталонный текст
 	fin.close();
 
-	unordered_map<char, int> lettersFreqs;
+	vector<pair<char, int>>  lettersFreqs;
 	unordered_map<char, int> ::iterator it;
 	lettersFreqs=freq(etText);
 	int i = 1;
-	for (it = --lettersFreqs.end(); i < 6; i++, it--) cout << "Символ: " << it->first << "; Частота: " << it->second << "\n";
+	for (auto it: lettersFreqs) cout << "Символ: " << it.first << "; Частота: " << it.second << "\n";
 	float is=index_sootv(etText);
 	cout << "Индекс соответствия: " << is << "\n";
 	//for (auto letter : etText) {
@@ -99,7 +109,7 @@ void decoding() {
 	float maxIndex = 0;
 	int expKeySize=1;
 	vector<float> is;
-	for (int keySize = 2; keySize <= 25; keySize++) {
+	for (int keySize = 1; keySize <= 25; keySize++) {
 		for (int j = 0; j < codedText.size(); j+=keySize)
 		{
 			group.push_back(codedText.at(j));
@@ -107,16 +117,16 @@ void decoding() {
 		float isi = index_sootv(group);
 		is.push_back(isi);
 		cout << "Длина ключа: " << keySize << "; Индекс соответствия: " << isi << "\n";
-		if (isi > maxIndex) {
+		
 			maxIndex = isi;
 			expKeySize = keySize;
-		}
+			
 		group.clear();
 	}
-	cout << "Предполагаемая длина ключа: " << expKeySize <<"\n";
+	//cout << "Предполагаемая длина ключа: " << expKeySize <<"\n";
 	
 
-	unordered_map<char, int> groupFreqs;
+	vector<pair<char, int>>  groupFreqs;
 	int trueKeySize;
 	vector<char>keyword;
 	cout << "Введите истиную длину ключа: ";
@@ -127,15 +137,17 @@ void decoding() {
 			group.push_back(codedText.at(j));
 		}
 		groupFreqs = freq(group);
-		auto s = --groupFreqs.end();
+		auto s =groupFreqs.begin();
 		const char p = ' ';
-		keyword.push_back(s->first - p);
+		keyword.push_back(char(s->first - p));
 		group.clear();
+		groupFreqs.clear();
 	}
 	cout << "Ключ: ";
 	for (auto i : keyword) cout << i;
 	cout << "\n";
-
+	/*action = 2;
+	coding(action);*/
 	cout << "Введите название файла, куда сохранить расшифрованный текст: \n";
 	cin >> outFileName;
 	int letterPos = 0;
@@ -148,16 +160,58 @@ void decoding() {
 	fout.close();
 	cout << "\nСохранено!\n";
 }
+void coding(int action) {
+	std::ifstream fin;
+	std::ofstream fout;
+	string keyword;
+	string output_file, input_file;
+	char letter, coded_letter;
+	cout << "\nВведите название файла с исходным текстом: ";
+	cin >> ws;
+	getline(cin, input_file);
+	
+	cout << "\nВведите название файла, куда будет сохранён текст: ";
+	cin >> ws;
+	getline(cin, output_file);
 
+	cout << "Введите ключевое слово:";
+	cin >> ws;
+	getline(cin, keyword);
+
+	fin.open(input_file, ios::binary);
+	fout.open(output_file, ios::binary);
+
+	int keyword_letter_code = 0;
+	if (!fin.is_open())
+		cout << "Невозможно открыть файл.\n";
+	else
+		while (fin.get(letter)) {
+
+			if (action== 1) {
+				coded_letter = letter + keyword_letter_code;
+				fout << coded_letter;
+			}
+			else {
+				coded_letter = letter - keyword_letter_code;
+				fout << coded_letter;
+			}
+			keyword_letter_code++;
+			if (keyword_letter_code > keyword.size()) keyword_letter_code = 0;
+		}
+	fin.close();
+	fout.close();
+
+}
 int main()
 {
 
 	setlocale(LC_ALL, "Russian");
 	
 	while (true) {
-		cout << "1. Анализ эталонного текста\n2. Анализ зашифрованного текста и дешифровка\n";
+		cout << "1. Анализ эталонного текста\n2. Анализ зашифрованного текста и дешифровка\n 3.  Зашифровать текст";
 		cout << "0. Выход из программы\n";
 		int com;
+		int action;
 		cin >> com;
 		switch (com) {
 		case 1: {
@@ -167,10 +221,14 @@ int main()
 		}
 		case 2: {
 			decoding();
-
+			
 			break;
 		}
-			 
+		case 3: {
+			action = 1;
+			coding(action);
+			break;
+		}
 		case 0: {
 			return 0;
 			break;
