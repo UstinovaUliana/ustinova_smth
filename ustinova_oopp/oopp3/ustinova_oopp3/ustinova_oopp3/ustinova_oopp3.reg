@@ -1,0 +1,15 @@
+﻿REGEDIT
+; Возможно, этот файл .REG используется программой установки.
+;   Если программа SETUP недоступна, записи, расположенные ниже, будут зарегистрированы
+;   в InitInstance автоматически с вызовом в
+;   CWinApp::RegisterShellFileTypes и COleObjectFactory::UpdateRegistryAll.
+
+HKEY_CLASSES_ROOT\.uupmfc = ustinovaoopp3.Document
+HKEY_CLASSES_ROOT\ustinovaoopp3.Document\shell\open\command = ustinova_oopp3.EXE %1
+HKEY_CLASSES_ROOT\ustinovaoopp3.Document\shell\open\ddeexec = [open("%1")]
+HKEY_CLASSES_ROOT\ustinovaoopp3.Document\shell\open\ddeexec\application = ustinova_oopp3
+    ; примечание: приложение необязательно
+    ;  (по умолчанию для имени приложения в команде)
+
+HKEY_CLASSES_ROOT\ustinovaoopp3.Document = ustinova_oopp3.Document
+
