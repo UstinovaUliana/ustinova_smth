@@ -15,11 +15,10 @@ protected: // создать только из сериализации
 // Атрибуты
 public:
 	ustinova_teaCollection collection;
-	//vector <shared_ptr<ustinova_tea>> ukazateli;
+	
 // Операции
 public:
-	/*void Draw(CDC* pDC);
-	CSize GetScrollSizes();*/
+	
 // Переопределение
 public:
 	virtual BOOL OnNewDocument();

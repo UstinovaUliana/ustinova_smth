@@ -22,6 +22,11 @@ void ustinova_tea::Serialize(CArchive& archive) {
 
 void ustinova_tea::ViewWrite(CDC* pDC, int& h, int& w)
 {
+	CString utext1 = _T("Чай");
+	pDC->TextOut(0, h, utext1);
+	if (utext1.GetLength() > w)
+		w = utext1.GetLength();
+	h += 40;
 	CString utext = _T("Название: ") + name + _T(";   Сорт: ") + sort + _T(";   Цена: ") + to_string(price).c_str() + _T(";   Оценка: ") + to_string(rate).c_str();
 	pDC->TextOut(0, h, utext);
 	if (utext.GetLength() > w)

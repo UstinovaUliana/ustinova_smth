@@ -50,9 +50,6 @@ BOOL CUstinovaOOPP3View::PreCreateWindow(CREATESTRUCT& cs)
 void CUstinovaOOPP3View::OnDraw(CDC* pDC)
 {
 	CUstinovaOOPP3Doc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
 
 	// TODO: добавьте здесь код отрисовки для собственных данных
 	int h = 0;

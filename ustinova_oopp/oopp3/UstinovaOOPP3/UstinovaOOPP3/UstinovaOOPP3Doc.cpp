@@ -137,17 +137,4 @@ void CUstinovaOOPP3Doc::Dump(CDumpContext& dc) const
 }
 #endif //_DEBUG
 
-//
 //// Команды CUstinovaOOPP3Doc
-//void CUstinovaOOPP3Doc::Draw(CDC* pDC)
-//{
-//	CSize size(0, 0);
-//	for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::Draw, placeholders::_1, pDC, ref(size)));
-//}
-//
-//CSize CUstinovaOOPP3Doc::GetScrollSizes()
-//{
-//	CSize result;
-//	for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::CalcScrollSizes, placeholders::_1, ref(result)));
-//	return result;
-//}

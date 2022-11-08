@@ -13,17 +13,17 @@ void ustinova_teaCollection::ViewWrite(CDC* pDC, int& h, int& w)
             w = str1.GetLength();
     }
     else
-        // Это через bind
         for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::ViewWrite, placeholders::_1, pDC, ref(h), ref(w)));
 }
 
 void ustinova_teaCollection::LoadFromFile(CArchive& ar)
 {
-    int companySize;
-    ar >> companySize;
+    int collSize,n;
+    ar >> collSize;
+    ar >> n;
     ukazateli.clear();
-    ukazateli.reserve(companySize);
-    for (int i = 0; i < companySize; i++)
+    ukazateli.reserve(collSize);
+    for (int i = 0; i < collSize; i++)
     {
         ustinova_tea* ukaz;
         ar >> ukaz;
@@ -39,7 +39,6 @@ void ArchiveTea(CArchive& archive, shared_ptr<ustinova_tea> tea)
 void ustinova_teaCollection::SaveToFile(CArchive& ar)
 {
     ar << ukazateli.size();
-    // Это через bind
     for_each(ukazateli.begin(), ukazateli.end(), bind(ArchiveTea, ref(ar), placeholders::_1));
 }
 
