@@ -21,20 +21,17 @@ void ustinova_tea::Serialize(CArchive& file) {
 
 CString ustinova_tea::UpdateText()
 {
-	CString outPrice, outRate;
-	outPrice.Format(L"%f", price);
-	outRate.Format(L"%f", rate);
-	CString utext = name + " "+ sort + " " + outPrice + " " + outRate;
+	CString utext = name + " " + sort + " " + to_string(price).c_str() + " " + to_string(rate).c_str() ;
 	return utext;
 }
 
-void ustinova_tea::Draw(CDC* tDC, CSize& size)
+void ustinova_tea::Draw(CDC* pDC, CSize& size)
 {
 	text = UpdateText();
 
-	tDC->TextOut(size.cx, size.cy, text);
+	pDC->TextOut(size.cx, size.cy, text);
 
-	extent = tDC->GetTextExtent(text);
+	extent = pDC->GetTextExtent(text);
 	size.cy += extent.cy;
 }
 

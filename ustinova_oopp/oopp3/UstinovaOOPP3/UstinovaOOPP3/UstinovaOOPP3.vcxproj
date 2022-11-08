@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{CBC0E378-1C95-4F2E-9448-94934CD7B271}</ProjectGuid>
+    <ProjectGuid>{F95F547C-98DA-424D-B9F2-01B22980BCFB}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
-    <RootNamespace>ustinovaoopp3</RootNamespace>
+    <RootNamespace>UstinovaOOPP3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -188,11 +188,12 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UstinovaOOPP3.h" />
+    <ClInclude Include="UstinovaOOPP3Doc.h" />
+    <ClInclude Include="UstinovaOOPP3View.h" />
     <ClInclude Include="ustinova_favouriteTea.h" />
-    <ClInclude Include="ustinova_oopp3.h" />
-    <ClInclude Include="ustinova_oopp3Doc.h" />
-    <ClInclude Include="ustinova_oopp3View.h" />
     <ClInclude Include="ustinova_tea.h" />
+    <ClInclude Include="ustinova_teaCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp" />
@@ -202,23 +203,24 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UstinovaOOPP3.cpp" />
+    <ClCompile Include="UstinovaOOPP3Doc.cpp" />
+    <ClCompile Include="UstinovaOOPP3View.cpp" />
     <ClCompile Include="ustinova_favouriteTea.cpp" />
-    <ClCompile Include="ustinova_oopp3.cpp" />
-    <ClCompile Include="ustinova_oopp3Doc.cpp" />
-    <ClCompile Include="ustinova_oopp3View.cpp" />
     <ClCompile Include="ustinova_tea.cpp" />
+    <ClCompile Include="ustinova_teaCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\ustinovaoopp3.rc2" />
-    <None Include="ustinova_oopp3.reg" />
+    <None Include="res\UstinovaOOPP3.rc2" />
+    <None Include="UstinovaOOPP3.reg" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ustinovaoopp3.rc" />
+    <ResourceCompile Include="UstinovaOOPP3.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Toolbar.bmp" />
-    <Image Include="res\ustinova_oopp3.ico" />
-    <Image Include="res\ustinova_oopp3Doc.ico" />
+    <Image Include="res\UstinovaOOPP3.ico" />
+    <Image Include="res\UstinovaOOPP3Doc.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

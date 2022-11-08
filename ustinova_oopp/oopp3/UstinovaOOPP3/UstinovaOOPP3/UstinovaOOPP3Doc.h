@@ -1,24 +1,25 @@
 ﻿
-// ustinova_oopp3Doc.h: интерфейс класса Custinovaoopp3Doc 
+// UstinovaOOPP3Doc.h: интерфейс класса CUstinovaOOPP3Doc 
 //
 
 
 #pragma once
-#include "ustinova_tea.h"
+#include "ustinova_teaCollection.h"
 
-class Custinovaoopp3Doc : public CDocument
+class CUstinovaOOPP3Doc : public CDocument
 {
 protected: // создать только из сериализации
-	Custinovaoopp3Doc() noexcept;
-	DECLARE_DYNCREATE(Custinovaoopp3Doc)
+	CUstinovaOOPP3Doc() noexcept;
+	DECLARE_DYNCREATE(CUstinovaOOPP3Doc)
 
 // Атрибуты
 public:
-	vector <shared_ptr<ustinova_tea>> ukazateli;
+	ustinova_teaCollection collection;
+	//vector <shared_ptr<ustinova_tea>> ukazateli;
 // Операции
 public:
-	void Draw(CDC* pDC);
-	CSize GetScrollSizes();
+	/*void Draw(CDC* pDC);
+	CSize GetScrollSizes();*/
 // Переопределение
 public:
 	virtual BOOL OnNewDocument();
@@ -30,7 +31,7 @@ public:
 
 // Реализация
 public:
-	virtual ~Custinovaoopp3Doc();
+	virtual ~CUstinovaOOPP3Doc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -46,6 +47,4 @@ protected:
 	// Вспомогательная функция, задающая содержимое поиска для обработчика поиска
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
-public:
-	afx_msg void OnEditdialog();
 };

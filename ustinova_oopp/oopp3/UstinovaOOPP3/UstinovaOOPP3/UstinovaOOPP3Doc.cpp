@@ -1,5 +1,5 @@
 ﻿
-// ustinova_oopp3Doc.cpp: реализация класса Custinovaoopp3Doc 
+// UstinovaOOPP3Doc.cpp: реализация класса CUstinovaOOPP3Doc 
 //
 
 #include "pch.h"
@@ -7,10 +7,10 @@
 // SHARED_HANDLERS можно определить в обработчиках фильтров просмотра реализации проекта ATL, эскизов
 // и поиска; позволяет совместно использовать код документа в данным проекте.
 #ifndef SHARED_HANDLERS
-#include "ustinova_oopp3.h"
+#include "UstinovaOOPP3.h"
 #endif
 
-#include "ustinova_oopp3Doc.h"
+#include "UstinovaOOPP3Doc.h"
 
 #include <propkey.h>
 
@@ -18,63 +18,61 @@
 #define new DEBUG_NEW
 #endif
 
-// Custinovaoopp3Doc
+// CUstinovaOOPP3Doc
 
-IMPLEMENT_DYNCREATE(Custinovaoopp3Doc, CDocument)
+IMPLEMENT_DYNCREATE(CUstinovaOOPP3Doc, CDocument)
 
-BEGIN_MESSAGE_MAP(Custinovaoopp3Doc, CDocument)
-	ON_COMMAND(ID_EDITDIALOG, &Custinovaoopp3Doc::OnEditdialog)
+BEGIN_MESSAGE_MAP(CUstinovaOOPP3Doc, CDocument)
 END_MESSAGE_MAP()
 
 
-// Создание или уничтожение Custinovaoopp3Doc
+// Создание или уничтожение CUstinovaOOPP3Doc
 
-Custinovaoopp3Doc::Custinovaoopp3Doc() noexcept
+CUstinovaOOPP3Doc::CUstinovaOOPP3Doc() noexcept
+{
+	// TODO: добавьте код для одноразового вызова конструктора
+
+}
+
+CUstinovaOOPP3Doc::~CUstinovaOOPP3Doc()
 {
 }
 
-Custinovaoopp3Doc::~Custinovaoopp3Doc()
-{
-}
-
-BOOL Custinovaoopp3Doc::OnNewDocument()
+BOOL CUstinovaOOPP3Doc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
 		return FALSE;
+
+	// TODO: добавьте код повторной инициализации
+	// (Документы SDI будут повторно использовать этот документ)
 
 	return TRUE;
 }
 
 
-// Сериализация Custinovaoopp3Doc
 
-void Custinovaoopp3Doc::Serialize(CArchive& ar)
+
+// Сериализация CUstinovaOOPP3Doc
+
+void CUstinovaOOPP3Doc::Serialize(CArchive& ar)
 {
+	
 	if (ar.IsStoring())
 	{
-		ar << ukazateli.size();
-
-		for_each(ukazateli.begin(), ukazateli.end(), [&](shared_ptr<ustinova_tea> tea) { ar << tea.get(); });
+		// TODO: добавьте код сохранения
+		collection.SaveToFile(ar);
 	}
 	else
 	{
-		size_t ukaz_size;
-		int n;
-		ar >> ukaz_size;
-		ar >> n;
-		for (size_t i = 0; i < ukaz_size; i++)
-		{
-			ustinova_tea* tea;
-			ar >> tea;
-			ukazateli.push_back(shared_ptr<ustinova_tea>(tea));
-		}
+		// TODO: добавьте код загрузки
+		collection.LoadFromFile(ar);
 	}
 }
 
 #ifdef SHARED_HANDLERS
 
 // Поддержка для эскизов
-void Custinovaoopp3Doc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
+void CUstinovaOOPP3Doc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 {
 	// Измените этот код для отображения данных документа
 	dc.FillSolidRect(lprcBounds, RGB(255, 255, 255));
@@ -95,7 +93,7 @@ void Custinovaoopp3Doc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 }
 
 // Поддержка обработчиков поиска
-void Custinovaoopp3Doc::InitializeSearchContent()
+void CUstinovaOOPP3Doc::InitializeSearchContent()
 {
 	CString strSearchContent;
 	// Задание содержимого поиска из данных документа.
@@ -105,7 +103,7 @@ void Custinovaoopp3Doc::InitializeSearchContent()
 	SetSearchContent(strSearchContent);
 }
 
-void Custinovaoopp3Doc::SetSearchContent(const CString& value)
+void CUstinovaOOPP3Doc::SetSearchContent(const CString& value)
 {
 	if (value.IsEmpty())
 	{
@@ -125,37 +123,31 @@ void Custinovaoopp3Doc::SetSearchContent(const CString& value)
 
 #endif // SHARED_HANDLERS
 
-// Диагностика Custinovaoopp3Doc
+// Диагностика CUstinovaOOPP3Doc
 
 #ifdef _DEBUG
-void Custinovaoopp3Doc::AssertValid() const
+void CUstinovaOOPP3Doc::AssertValid() const
 {
 	CDocument::AssertValid();
 }
 
-void Custinovaoopp3Doc::Dump(CDumpContext& dc) const
+void CUstinovaOOPP3Doc::Dump(CDumpContext& dc) const
 {
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
 
-
-// Команды Custinovaoopp3Doc
-void Custinovaoopp3Doc::Draw(CDC* pDC)
-{
-	CSize size(0, 0);
-	for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::Draw, placeholders::_1, pDC, ref(size)));
-}
-
-CSize Custinovaoopp3Doc::GetScrollSizes()
-{
-	CSize result;
-	for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::CalcScrollSizes, placeholders::_1, ref(result)));
-	return result;
-}
-
-
-void Custinovaoopp3Doc::OnEditdialog()
-{
-	// TODO: добавьте свой код обработчика команд
-}
+//
+//// Команды CUstinovaOOPP3Doc
+//void CUstinovaOOPP3Doc::Draw(CDC* pDC)
+//{
+//	CSize size(0, 0);
+//	for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::Draw, placeholders::_1, pDC, ref(size)));
+//}
+//
+//CSize CUstinovaOOPP3Doc::GetScrollSizes()
+//{
+//	CSize result;
+//	for_each(ukazateli.begin(), ukazateli.end(), bind(&ustinova_tea::CalcScrollSizes, placeholders::_1, ref(result)));
+//	return result;
+//}

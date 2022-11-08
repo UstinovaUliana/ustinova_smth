@@ -21,10 +21,6 @@ void ustinova_favouriteTea::Serialize(CArchive& arch) {
 }
 CString ustinova_favouriteTea::UpdateText()
 {
-	CString outPrice, outRate, outPerRate;
-	outPrice.Format(L"%f", price);
-	outRate.Format(L"%f", rate);
-	outPerRate.Format(L"%f", personal_rate);
-	CString utext = name + " " + sort + " " + outPrice + " " + outRate+ " " + outPerRate;
+	CString utext = name + " " + sort + " " + to_string(price).c_str() + " " + to_string(rate).c_str() + " " + to_string(personal_rate).c_str();
 	return utext;
 }

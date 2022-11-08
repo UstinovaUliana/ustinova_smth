@@ -1,53 +1,53 @@
 ﻿
-// ustinova_oopp3.cpp: определяет поведение классов для приложения.
+// UstinovaOOPP3.cpp: определяет поведение классов для приложения.
 //
 
 #include "pch.h"
 #include "framework.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"
-#include "ustinova_oopp3.h"
+#include "UstinovaOOPP3.h"
 #include "MainFrm.h"
 
-#include "ustinova_oopp3Doc.h"
-#include "ustinova_oopp3View.h"
+#include "UstinovaOOPP3Doc.h"
+#include "UstinovaOOPP3View.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// Custinovaoopp3App
+// CUstinovaOOPP3App
 
-BEGIN_MESSAGE_MAP(Custinovaoopp3App, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &Custinovaoopp3App::OnAppAbout)
+BEGIN_MESSAGE_MAP(CUstinovaOOPP3App, CWinApp)
+	ON_COMMAND(ID_APP_ABOUT, &CUstinovaOOPP3App::OnAppAbout)
 	// Стандартные команды по работе с файлами документов
 	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 END_MESSAGE_MAP()
 
 
-// Создание Custinovaoopp3App
+// Создание CUstinovaOOPP3App
 
-Custinovaoopp3App::Custinovaoopp3App() noexcept
+CUstinovaOOPP3App::CUstinovaOOPP3App() noexcept
 {
 
 	// TODO: замените ниже строку идентификатора приложения строкой уникального идентификатора; рекомендуемый
 	// формат для строки: ИмяКомпании.ИмяПродукта.СубПродукт.СведенияОВерсии
-	SetAppID(_T("ustinovaoopp3.AppID.NoVersion"));
+	SetAppID(_T("UstinovaOOPP3.AppID.NoVersion"));
 
 	// TODO: добавьте код создания,
 	// Размещает весь важный код инициализации в InitInstance
 }
 
-// Единственный объект Custinovaoopp3App
+// Единственный объект CUstinovaOOPP3App
 
-Custinovaoopp3App theApp;
+CUstinovaOOPP3App theApp;
 
 
-// Инициализация Custinovaoopp3App
+// Инициализация CUstinovaOOPP3App
 
-BOOL Custinovaoopp3App::InitInstance()
+BOOL CUstinovaOOPP3App::InitInstance()
 {
 	// InitCommonControlsEx() требуются для Windows XP, если манифест
 	// приложения использует ComCtl32.dll версии 6 или более поздней версии для включения
@@ -62,6 +62,8 @@ BOOL Custinovaoopp3App::InitInstance()
 	CWinApp::InitInstance();
 
 
+	EnableTaskbarInteraction(FALSE);
+
 	// Для использования элемента управления RichEdit требуется метод AfxInitRichEdit2()
 	// AfxInitRichEdit2();
 
@@ -72,12 +74,6 @@ BOOL Custinovaoopp3App::InitInstance()
 	// Измените раздел реестра, в котором хранятся параметры
 	// TODO: следует изменить эту строку на что-нибудь подходящее,
 	// например на название организации
-
-
-	AfxEnableControlContainer();
-
-	EnableTaskbarInteraction(FALSE);
-
 	SetRegistryKey(_T("Локальные приложения, созданные с помощью мастера приложений"));
 	LoadStdProfileSettings(4);  // Загрузите стандартные параметры INI-файла (включая MRU)
 
@@ -87,9 +83,9 @@ BOOL Custinovaoopp3App::InitInstance()
 	CSingleDocTemplate* pDocTemplate;
 	pDocTemplate = new CSingleDocTemplate(
 		IDR_MAINFRAME,
-		RUNTIME_CLASS(Custinovaoopp3Doc),
+		RUNTIME_CLASS(CUstinovaOOPP3Doc),
 		RUNTIME_CLASS(CMainFrame),       // основное окно рамки SDI
-		RUNTIME_CLASS(Custinovaoopp3View));
+		RUNTIME_CLASS(CUstinovaOOPP3View));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
@@ -122,14 +118,9 @@ BOOL Custinovaoopp3App::InitInstance()
 	return TRUE;
 }
 
-// Обработчики сообщений Custinovaoopp3App
+// Обработчики сообщений CUstinovaOOPP3App
 
-int  Custinovaoopp3App::ExitInstance()
-{
-	AfxOleTerm(FALSE);
 
-	return CWinApp::ExitInstance();
-}
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении
 
 class CAboutDlg : public CDialogEx
@@ -163,13 +154,13 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // Команда приложения для запуска диалога
-void Custinovaoopp3App::OnAppAbout()
+void CUstinovaOOPP3App::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
 
-// Обработчики сообщений Custinovaoopp3App
+// Обработчики сообщений CUstinovaOOPP3App
 
 
 
