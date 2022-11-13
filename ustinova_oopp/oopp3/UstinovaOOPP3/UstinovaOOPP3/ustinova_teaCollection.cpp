@@ -18,9 +18,8 @@ void ustinova_teaCollection::ViewWrite(CDC* pDC, int& h, int& w)
 
 void ustinova_teaCollection::LoadFromFile(CArchive& ar)
 {
-    int collSize,n;
+    int collSize;
     ar >> collSize;
-    ar >> n;
     ukazateli.clear();
     ukazateli.reserve(collSize);
     for (int i = 0; i < collSize; i++)
@@ -29,6 +28,15 @@ void ustinova_teaCollection::LoadFromFile(CArchive& ar)
         ar >> ukaz;
         ukazateli.push_back(shared_ptr<ustinova_tea>(ukaz));
     }
+}
+
+void ustinova_teaCollection::InitListBox(CListBox& personsList)
+{
+    for_each(ukazateli.begin(), ukazateli.end(), [&personsList](shared_ptr<ustinova_tea>& tea)
+        {
+            personsList.AddString(tea->getName());
+        });
+    personsList.SetCaretIndex(0);
 }
 
 void ArchiveTea(CArchive& archive, shared_ptr<ustinova_tea> tea)

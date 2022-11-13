@@ -11,5 +11,7 @@ public:
 	void ViewWrite(CDC* pDC, int& h, int& w);
 	void LoadFromFile(CArchive& ar);
 	void SaveToFile(CArchive& ar);
+
+	void ustinova_teaCollection::InitListBox(CListBox& personsList);
 };
 

@@ -23,6 +23,7 @@
 IMPLEMENT_DYNCREATE(CUstinovaOOPP3Doc, CDocument)
 
 BEGIN_MESSAGE_MAP(CUstinovaOOPP3Doc, CDocument)
+	ON_COMMAND(ID_EDIT_DIALOG, &CUstinovaOOPP3Doc::OnEditDialog)
 END_MESSAGE_MAP()
 
 
@@ -138,3 +139,13 @@ void CUstinovaOOPP3Doc::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 //// Команды CUstinovaOOPP3Doc
+
+void CUstinovaOOPP3Doc::OnEditDialog()
+{
+	ustinova_editDialog dlg(this);
+	if (dlg.DoModal() == IDOK) {
+		UpdateAllViews(NULL);
+	}
+	delete dlg;
+	// TODO: добавьте свой код обработчика команд
+}

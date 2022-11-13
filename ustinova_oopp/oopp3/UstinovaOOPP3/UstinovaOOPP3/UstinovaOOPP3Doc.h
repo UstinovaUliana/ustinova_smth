@@ -6,6 +6,8 @@
 #pragma once
 #include "ustinova_teaCollection.h"
 
+#include "ustinova_editDialog.h"
+
 class CUstinovaOOPP3Doc : public CDocument
 {
 protected: // создать только из сериализации
@@ -46,4 +48,6 @@ protected:
 	// Вспомогательная функция, задающая содержимое поиска для обработчика поиска
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+public:
+	afx_msg void OnEditDialog();
 };

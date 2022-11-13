@@ -11,6 +11,10 @@ public:
 	virtual ~ustinova_favouriteTea();
 	void ViewWrite(CDC* pDC, int& h, int& w);
 	virtual void Serialize(CArchive& archive);
+
+	virtual void inputTea(ustinova_editDialog* dlg);
+	virtual void outputTea(ustinova_editDialog* dlg);
+	CString  getName() const;
 	/*virtual CString UpdateText();*/
 };
 

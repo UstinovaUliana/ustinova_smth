@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ustinova_tea.h"
+#include "ustinova_editDialog.h"
 ustinova_tea::ustinova_tea()
 {
 }
@@ -32,6 +33,30 @@ void ustinova_tea::ViewWrite(CDC* pDC, int& h, int& w)
 	if (utext.GetLength() > w)
 		w = utext.GetLength();
 	h += 40;
+}
+
+void ustinova_tea::outputTea(ustinova_editDialog* dlg)
+{
+	dlg->NameText = this->name;
+	dlg->SortText = this->sort;
+	dlg->PriceText = to_string(this->price).c_str();
+	dlg->RateText = to_string(this->rate).c_str();
+	dlg->PerRateText = "";
+	dlg->PerRateEdit.ShowWindow(SW_HIDE);
+	dlg->PerRateLabel.ShowWindow(SW_HIDE);
+}
+
+void ustinova_tea::inputTea(ustinova_editDialog* dlg)
+{
+	name = dlg->NameText;
+	sort = dlg->SortText;
+	price = atoi(dlg->PriceText);
+	rate = atoi(dlg->RateText);
+}
+
+CString ustinova_tea::getName() const
+{
+	return name;
 }
 
 //CString ustinova_tea::UpdateText()

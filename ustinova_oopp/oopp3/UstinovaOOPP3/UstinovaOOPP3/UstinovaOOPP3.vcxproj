@@ -191,6 +191,7 @@
     <ClInclude Include="UstinovaOOPP3.h" />
     <ClInclude Include="UstinovaOOPP3Doc.h" />
     <ClInclude Include="UstinovaOOPP3View.h" />
+    <ClInclude Include="ustinova_editDialog.h" />
     <ClInclude Include="ustinova_favouriteTea.h" />
     <ClInclude Include="ustinova_tea.h" />
     <ClInclude Include="ustinova_teaCollection.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="UstinovaOOPP3.cpp" />
     <ClCompile Include="UstinovaOOPP3Doc.cpp" />
     <ClCompile Include="UstinovaOOPP3View.cpp" />
+    <ClCompile Include="ustinova_editDialog.cpp" />
     <ClCompile Include="ustinova_favouriteTea.cpp" />
     <ClCompile Include="ustinova_tea.cpp" />
     <ClCompile Include="ustinova_teaCollection.cpp" />

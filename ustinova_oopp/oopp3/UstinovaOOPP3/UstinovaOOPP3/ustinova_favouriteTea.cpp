@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ustinova_favouriteTea.h"
 
+#include "ustinova_editDialog.h"
 ustinova_favouriteTea::ustinova_favouriteTea()
 {
 };
@@ -44,4 +45,29 @@ void  ustinova_favouriteTea::ViewWrite(CDC* pDC, int& h, int& w)
 	if (utext2.GetLength() > w)
 		w = utext2.GetLength();
 	h += 40;*/
+}
+void ustinova_favouriteTea::outputTea(ustinova_editDialog* dlg)
+{
+	dlg->NameText = this->name;
+	dlg->SortText = this->sort;
+	dlg->PriceText = to_string(this->price).c_str();
+	dlg->RateText = to_string(this->rate).c_str();
+	dlg->PerRateText = to_string(this->personal_rate).c_str();
+
+	dlg->PerRateEdit.ShowWindow(SW_SHOW);
+	dlg->PerRateLabel.ShowWindow(SW_SHOW);
+}
+
+void ustinova_favouriteTea::inputTea(ustinova_editDialog* dlg)
+{
+	name = dlg->NameText;
+	sort = dlg->SortText;
+	price = atoi(dlg->PriceText);
+	rate = atoi(dlg->RateText);
+	personal_rate = atoi(dlg->PerRateText);
+}
+
+CString ustinova_favouriteTea::getName() const
+{
+	return name;
 }
