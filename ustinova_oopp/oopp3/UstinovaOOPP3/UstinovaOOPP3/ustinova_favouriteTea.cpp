@@ -62,9 +62,9 @@ void ustinova_favouriteTea::inputTea(ustinova_editDialog* dlg)
 {
 	name = dlg->NameText;
 	sort = dlg->SortText;
-	price = atoi(dlg->PriceText);
-	rate = atoi(dlg->RateText);
-	personal_rate = atoi(dlg->PerRateText);
+	price = _ttoi(dlg->PriceText);
+	rate = _ttoi(dlg->RateText);
+	personal_rate = _ttoi(dlg->PerRateText);;
 }
 
 CString ustinova_favouriteTea::getName() const

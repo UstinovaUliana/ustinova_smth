@@ -21,7 +21,7 @@ void ustinova_teaCollection::LoadFromFile(CArchive& ar)
     int collSize;
     ar >> collSize;
     ukazateli.clear();
-    ukazateli.reserve(collSize);
+   // ukazateli.reserve(collSize);
     for (int i = 0; i < collSize; i++)
     {
         ustinova_tea* ukaz;
