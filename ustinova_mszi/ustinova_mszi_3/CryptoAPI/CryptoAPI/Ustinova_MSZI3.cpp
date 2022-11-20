@@ -7,7 +7,7 @@
 #define new DEBUG_NEW
 #endif
 
-string pass_;
+//string pass_;
 
 #pragma comment(lib, "crypt32.lib")
 
@@ -40,14 +40,6 @@ public:
 	{
 		if (!CryptAcquireContext(&m_hCP, NULL, MS_ENH_RSA_AES_PROV, PROV_RSA_AES, CRYPT_VERIFYCONTEXT))	// использование временных ключей, не сохраняющихся в контейнере
 			PrintError();
-//		if (!CryptAcquireContext(&m_hCP, "My Container", MS_ENH_RSA_AES_PROV, PROV_RSA_AES, 0))
-//		{
-//			if (GetLastError() == NTE_BAD_KEYSET)
-//			{
-//				if (!CryptAcquireContext(&m_hCP, "My Container", MS_ENH_RSA_AES_PROV, PROV_RSA_AES, CRYPT_NEWKEYSET))
-//					PrintError();
-//			}
-//		}
 	}
 	
 	~CryptoAPI()
@@ -59,36 +51,42 @@ public:
 				PrintError();
 		}
 	}
-
+	//сгенерировать пару открытый и закрытый ключ
 	void GenKeyPair()
 	{
 		if (!CryptGenKey(m_hCP, CALG_RSA_KEYX, CRYPT_EXPORTABLE, &m_hExchangeKey))
 			PrintError();
 	}
-
+	//сгенерировать случайный сессионный ключ
 	void GenSessionKey()
 	{
 		if (!CryptGenKey(m_hCP, CALG_AES_256, CRYPT_EXPORTABLE, &m_hSessionKey))
 			PrintError();
 	}
-
+	//генерирует экспорт ключ на основе хэша пароля
 	void GenExportKey(const string& sPassword)
 	{
+		//дескриптор хэш-объекта
 		HCRYPTHASH hHash;
+		//создание объекта хэширования с помощью функции CryptCreateHash
 		if (!CryptCreateHash(m_hCP, CALG_SHA_256, NULL, 0, &hHash))
 		{
 			PrintError();
 			return;
 		}
+		//наполнение объекта хэширования его хэшируемыми данными с помощью функции CryptHashData
+		//(BYTE*)sPassword.c_str() Указатель на буфер, содержащий данные, добавляемые в хэш - объект.
 		if(!CryptHashData(hHash, (BYTE*)sPassword.c_str(), sPassword.length(), 0))
 		{
 			PrintError();
 			return;
 		}
-
+		//функция CryptDeriveKey гарантирует, что при использовании одного и того же CSP и алгоритмов ключи, 
+		//сгенерированные из одних и тех же базовых данных, идентичны.
+		//она не может генерировать пары открытого и закрытого ключей.
 		if (!CryptDeriveKey(m_hCP, CALG_AES_256, hHash, CRYPT_EXPORTABLE, &m_hExportKey))
 			PrintError();
-
+		//объект хэширования удаляется функцией CryptDestroyHash
 		CryptDestroyHash(hHash);
 	}
 
@@ -96,6 +94,7 @@ public:
 	{
 		if (hKey)
 		{
+			//CryptDestroyKey уничтожает дескриптор, ссылающийся на параметр hKey.
 			if (!CryptDestroyKey(hKey))
 				PrintError();
 			hKey = NULL;
@@ -108,33 +107,37 @@ public:
 		DestroyKey(m_hSessionKey);
 		DestroyKey(m_hExportKey);
 	}
-
+	//экспорт ключа hKey в вектор
 	void DoExportKey(vector<char>& v, HCRYPTKEY hKey, HCRYPTKEY hExpKey, DWORD dwType)
 	{
 		DWORD dwLen = 0;
+		//безопасно экспортирует криптографический ключ или пару ключей
+		//данные ключа 1 шифруются с помощью ключа 2 
+		//Если NULL,требуемый размер буфера помещается в значение, указанное параметром &dwLen
 		if (!CryptExportKey(hKey, hExpKey, dwType, 0, NULL, &dwLen))
 		{
 			PrintError();
 			return;
 		}
 		v.resize(dwLen);
+		//data Указатель на первый элемент вектора
 		if (!CryptExportKey(hKey, hExpKey, dwType, 0, (BYTE*)v.data(), &dwLen))
 			PrintError();
 		v.resize(dwLen);		// поскольку для некоторых ключей реальный размер экспортированных данных 
 								// может быть меньше размера, необходимого для экспорта
 	}
-
+	//в векторе хранится импортируемый ключ, из него вынимается ключ в hKey расшифровка с поомщью hPubKey
 	void DoImportKey(vector<char>& v, HCRYPTKEY& hKey, HCRYPTKEY hPubKey, DWORD dwType)
 	{
 		if (!CryptImportKey(m_hCP, (BYTE*)v.data(), v.size(), hPubKey, CRYPT_EXPORTABLE, &hKey))
 			PrintError();
 	}
-
+	//экспорт публичного ключа в вектор
 	void ExportPublicKey(vector<char>& v)
 	{
 		DoExportKey(v, m_hExchangeKey, NULL, PUBLICKEYBLOB);
 	}
-
+	//с помощью экспортного ключа приватный ключ шифруется при экспорте
 	void ExportPrivateKey(vector<char>& v)
 	{
 		DoExportKey(v, m_hExchangeKey, m_hExportKey, PRIVATEKEYBLOB);
@@ -144,7 +147,7 @@ public:
 	{
 		DoExportKey(v, m_hSessionKey, m_hExchangeKey, SIMPLEBLOB);
 	}
-
+	//импорт публичного ключа из вектора без расшифровки
 	void ImportPublicKey(vector<char>& v)
 	{
 		DoImportKey(v, m_hExchangeKey, NULL, PUBLICKEYBLOB);
@@ -159,7 +162,7 @@ public:
 	{
 		DoImportKey(v, m_hSessionKey, NULL, SIMPLEBLOB);
 	}
-
+	//шифрование данных из потокового ввода-вывода
 	void EncryptData(ifstream& in, ofstream& out, DWORD dwSize, HCRYPTKEY hKey = NULL, bool bRSA = false)
 		// CryptGetKeyParam с KP_BLOCKLEN возвращает размер блока в битах, 
 		// для большинства алгоритмов можно использовать кратное значение,
@@ -170,6 +173,8 @@ public:
 			hKey = m_hSessionKey;
 		DWORD dwBlockLen = 0;
 		DWORD dwDataLen = sizeof(DWORD);
+		//dwBlockLen получает длину блока в битах
+		//dwDataLen размер буфера dwBlockLen
 		if (!CryptGetKeyParam(hKey, KP_BLOCKLEN, (BYTE*)&dwBlockLen, &dwDataLen, 0))
 			PrintError();
 		writeln("Block length: ", dwBlockLen);
@@ -181,26 +186,40 @@ public:
 		}
 
 		DWORD dwDone = 0;
+		//клово ячеек вектора = размер блока шифра
 		vector<char> v(dwBlockLen);
 
 		bool bDone = false;
 		while (!bDone)
 		{
+			//read копирует блок данных до конца строки, но не более dwBlockLen символов
+			//dwBlockLen  - колво символов для извлечения. текст записан в вектор
 			in.read(v.data(), dwBlockLen);
+			//Возвращает количество символов, извлеченных последней неформатированной операцией ввода
 			DWORD dwRead = (DWORD)in.gcount();
 			dwDone += dwRead;
+			//дошли ли до конца текста
 			bDone = (dwDone == dwSize);
 			dwDataLen = dwRead;
+			//Параметры функции CryptEncrypt
+			//1=Дескриптор ключа шифрования.Ключ указывает используемый алгоритм шифрования.
+			//2=Дескриптор хэш-объекта. Если данные должны быть хэшированы и зашифрованы одновременно
+			//3=Логическое значение, указывающее, является ли этот раздел последним в шифруемом ряду.
+			//4=флаг 5=Указатель на буфер, содержащий зашифрованный открытый текст
+			//Если 5=NULL, фия вычисляет необходимый размер для зашифрованного текста и помещает его в 6
+			//6=длина открытого текста в байтах 
+			//7=бщий размер входного буфера в байтах.
 			if (!CryptEncrypt(hKey, NULL, bDone, 0, NULL, &dwDataLen, 0))
 				PrintError();
 			if (dwDataLen > v.size())
 				v.resize(dwDataLen);
 			if (!CryptEncrypt(hKey, NULL, bDone, 0, (BYTE*)v.data(), &dwRead, v.size()))
 				PrintError();
+			//вывод зашифр текста, dwRead Количество вставляемых символов.
 			out.write(v.data(), dwRead);
 		}
 	}
-
+	//дешифровка данных из потокового ввода-вывода
 	void DecryptData(ifstream& in, ofstream& out, DWORD dwSize, HCRYPTKEY hKey = NULL, bool bRSA = false)
 	{
 		if (!hKey)
@@ -231,7 +250,7 @@ public:
 			out.write(v.data(), dwRead);
 		}
 	}
-
+	//шифрование данных из вектора
 	void EncryptData(vector<char>& vIn, vector<char>& vOut, HCRYPTKEY hKey = NULL, bool bRSA = false)
 	{
 		if (!hKey)
@@ -255,6 +274,8 @@ public:
 		while (!bDone)
 		{
 			DWORD dwRead = min(dwBlockLen, vIn.size() - dwDone);
+			//Копирует байты между буферами
+			//1=Новый буфер.	 2=Буфер, из которого происходит копирование. 3=Число копируемых символов
 			memcpy(v.data(), vIn.data() + dwDone, dwRead);
 			dwDone += dwRead;
 			bDone = (dwDone == vIn.size());
@@ -265,6 +286,7 @@ public:
 				v.resize(dwDataLen);
 			if (!CryptEncrypt(hKey, NULL, bDone, 0, (BYTE*)v.data(), &dwRead, v.size()))
 				PrintError();
+			//1=Позиция в векторе, куда вставляются новые элемент. 2-3=Итераторы, указывающие диапазон элементов
 			vOut.insert(vOut.end(), v.begin(), v.begin() + dwRead);
 		}
 	}
@@ -308,14 +330,14 @@ public:
 			vector<char> v;
 			//экспорт закрытого ключа в вектор+шифровка закрытого при экспорте при помощи export ключа
 			ExportPrivateKey(v);
-			ofstream out("private.key.txt", ios::binary);
+			ofstream out("private_key.txt", ios::binary);
 			out.write(v.data(), v.size());
 		}
 		{
 			vector<char> v;
 			//экспорт открытого ключа в вектор
 			ExportPublicKey(v);
-			ofstream out("public.key.txt", ios::binary);
+			ofstream out("public_key.txt", ios::binary);
 			out.write(v.data(), v.size());
 		}
 		cout << "Ключи сгенерированы.\n";
@@ -324,13 +346,13 @@ public:
 	void ImportPrivateKeyInit(string pass)
 	{
 		GenExportKey(pass);
-		ifstream in("private.key.txt", ios::binary);
+		ifstream in("private_key.txt", ios::binary);
 		vector v(istreambuf_iterator<char>{in}, {});
 		ImportPrivateKey(v);
 	}
 	void ImportPublicKeyInit()
 	{
-		ifstream in("public.key.txt", ios::binary);
+		ifstream in("public_key.txt", ios::binary);
 		vector v(istreambuf_iterator<char>{in}, {});
 		ImportPublicKey(v);
 	}
@@ -405,100 +427,101 @@ public:
 		cout << "Введите пароль: ";
 		cin.ignore(1, '\n');
 		getline(cin, pass);
-		pass_ = pass;
 		GenKeys(pass);
 	}
 	//!
 };
 
-void CryptoTest()
-{
-	{
-		CryptoAPI crypto;
-
-		crypto.GenKeyPair();
-		crypto.GenSessionKey();
-		crypto.GenExportKey("12345");
-
-		{
-			vector<char> v;
-			crypto.ExportPrivateKey(v);
-			ofstream out("private.key", ios::binary);
-			out.write(v.data(), v.size());
-		}
-
-		{
-			vector<char> v;
-			crypto.ExportPublicKey(v);
-			ofstream out("public.key", ios::binary);
-			out.write(v.data(), v.size());
-		}
-
-		// CryptExportKey не шифрует, а подписывает сессионные ключи, поэтому лучше использовать следующий блок
-		{
-			vector<char> v;
-			crypto.ExportSessionKey(v);
-			ofstream out("session.key", ios::binary);
-			out.write(v.data(), v.size());
-		}
-
-		{
-			vector<char> v1;
-			vector<char> v2;
-			crypto.ExportSessionKey(v1);
-			crypto.EncryptData(v1, v2, crypto.GetExchangeKey(), true);
-			ofstream out("session.enc.key", ios::binary);
-			out.write(v2.data(), v2.size());
-		}
-
-		{
-			ifstream in("CryptoAPI.cpp", ios::binary);
-			ofstream out("CryptoAPI.cpp.enc", ios::binary);
-			crypto.EncryptData(in, out, (DWORD)filesystem::file_size("CryptoAPI.cpp"));
-		}
-	}
-
-	
-	{
-		CryptoAPI crypto;
-
-		crypto.GenExportKey("12345");
-		{
-			ifstream in("private.key", ios::binary);
-			vector v(istreambuf_iterator<char>{in}, {});
-			crypto.ImportPrivateKey(v);
-		}
-
-		{
-			ifstream in("public.key", ios::binary);
-			vector v(istreambuf_iterator<char>{in}, {});
-			crypto.ImportPublicKey(v);
-		}
-
-		{
-			ifstream in("session.key", ios::binary);
-			vector v(istreambuf_iterator<char>{in}, {});
-			crypto.ImportSessionKey(v);
-		}
-
-		{
-			ifstream in("session.enc.key", ios::binary);
-			vector v1(istreambuf_iterator<char>{in}, {});
-			vector<char> v2;
-			crypto.DecryptData(v1, v2, crypto.GetExchangeKey(), true);
-			crypto.ImportSessionKey(v2);
-		}
-
-		{
-			ifstream in("CryptoAPI.cpp.enc", ios::binary);
-			ofstream out("CryptoAPI.cpp.dec", ios::binary);
-			crypto.DecryptData(in, out, (DWORD)filesystem::file_size("CryptoAPI.cpp.enc"));
-		}
-	}
-}
+//void CryptoTest()
+//{
+//	{
+//		CryptoAPI crypto;
+//
+//		crypto.GenKeyPair();
+//		crypto.GenSessionKey();
+//		crypto.GenExportKey("12345");
+//
+//		{
+//			vector<char> v;
+//			crypto.ExportPrivateKey(v);
+//			ofstream out("private.key", ios::binary);
+//			out.write(v.data(), v.size());
+//		}
+//
+//		{
+//			vector<char> v;
+//			crypto.ExportPublicKey(v);
+//			ofstream out("public.key", ios::binary);
+//			out.write(v.data(), v.size());
+//		}
+//
+//		// CryptExportKey не шифрует, а подписывает сессионные ключи, поэтому лучше использовать следующий блок
+//		{
+//			vector<char> v;
+//			crypto.ExportSessionKey(v);
+//			ofstream out("session.key", ios::binary);
+//			out.write(v.data(), v.size());
+//		}
+//
+//		{
+//			vector<char> v1;
+//			vector<char> v2;
+//			crypto.ExportSessionKey(v1);
+//			crypto.EncryptData(v1, v2, crypto.GetExchangeKey(), true);
+//			ofstream out("session.enc.key", ios::binary);
+//			out.write(v2.data(), v2.size());
+//		}
+//
+//		{
+//			ifstream in("CryptoAPI.cpp", ios::binary);
+//			ofstream out("CryptoAPI.cpp.enc", ios::binary);
+//			crypto.EncryptData(in, out, (DWORD)filesystem::file_size("CryptoAPI.cpp"));
+//		}
+//	}
+//
+//	
+//	{
+//		CryptoAPI crypto;
+//
+//		crypto.GenExportKey("12345");
+//		{
+//			ifstream in("private.key", ios::binary);
+//			vector v(istreambuf_iterator<char>{in}, {});
+//			crypto.ImportPrivateKey(v);
+//		}
+//
+//		{
+//			ifstream in("public.key", ios::binary);
+//			vector v(istreambuf_iterator<char>{in}, {});
+//			crypto.ImportPublicKey(v);
+//		}
+//
+//		{
+//			ifstream in("session.key", ios::binary);
+//			vector v(istreambuf_iterator<char>{in}, {});
+//			crypto.ImportSessionKey(v);
+//		}
+//
+//		{
+//			ifstream in("session.enc.key", ios::binary);
+//			vector v1(istreambuf_iterator<char>{in}, {});
+//			vector<char> v2;
+//			crypto.DecryptData(v1, v2, crypto.GetExchangeKey(), true);
+//			crypto.ImportSessionKey(v2);
+//		}
+//
+//		{
+//			ifstream in("CryptoAPI.cpp.enc", ios::binary);
+//			ofstream out("CryptoAPI.cpp.dec", ios::binary);
+//			crypto.DecryptData(in, out, (DWORD)filesystem::file_size("CryptoAPI.cpp.enc"));
+//		}
+//	}
+//}
 
 int main()
 {     
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	int nRetCode = 0;
 
 	HMODULE hModule = ::GetModuleHandle(nullptr);
@@ -551,8 +574,10 @@ int main()
 				case 3:
 				{
 					string infilename, outfilename, pass;
-					pass_ = "12345";
-					crypto.ImportPrivateKeyInit(pass_);
+					cout << "Введите пароль: ";
+					cin.ignore(1, '\n');
+					getline(cin, pass);
+					crypto.ImportPrivateKeyInit(pass);
 					cout << "\nВведите название файла для считывания: ";
 					cin >> infilename;
 					cout << "\nВведите название файла для сохранения: ";
