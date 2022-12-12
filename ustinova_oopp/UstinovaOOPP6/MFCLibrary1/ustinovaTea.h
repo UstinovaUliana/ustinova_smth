@@ -5,8 +5,8 @@ class ustinovaTea: public CObject
 {
 	public:
 		DECLARE_SERIAL(ustinovaTea);
-		CString name=_T("");
-		CString sort=_T("") ;
+		CString name="null";
+		CString sort="null" ;
 		int price = 0;
 		int rate = 0;
 

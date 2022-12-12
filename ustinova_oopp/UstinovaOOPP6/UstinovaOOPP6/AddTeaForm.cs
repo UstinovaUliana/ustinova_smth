@@ -20,12 +20,12 @@ namespace UstinovaOOPP6
             InitializeComponent();
             isnew = addnew;
             id = idit_id;
-            if (isnew) checkBoxIsFav.Checked = true;
             if (!isnew)
             {
                 checkBoxIsFav.Hide();
                 ShowInfo(idit_id);
             }
+            else checkBoxIsFav.Checked = true;
         }
 
         private void checkBoxIsFav_CheckedChanged(object sender, EventArgs e)
@@ -61,6 +61,9 @@ namespace UstinovaOOPP6
                 textBoxSort1.Text = p.sort;
                 textBoxPrice1.Text = Convert.ToString(p.price);
                 textBoxRate1.Text = Convert.ToString(p.rate);
+                checkBoxIsFav.Checked = false;
+                label1PerRate.Visible = false;
+                textBoxPerRate1.Visible = false;
             }
             else
             {
@@ -71,6 +74,9 @@ namespace UstinovaOOPP6
                 textBoxPrice1.Text = Convert.ToString(n.price);
                 textBoxRate1.Text = Convert.ToString(n.rate);
                 textBoxPerRate1.Text = Convert.ToString(n.personal_rate);
+                checkBoxIsFav.Checked = true;
+                label1PerRate.Visible = true;
+                textBoxPerRate1.Visible = true;
             }
         }
 

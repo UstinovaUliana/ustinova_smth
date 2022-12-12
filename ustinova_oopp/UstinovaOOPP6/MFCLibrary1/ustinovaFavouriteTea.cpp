@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ustinovaFavouriteTea.h"
 
-IMPLEMENT_SERIAL(ustinovaFavouriteTea, ustinovaTea, 0);
+IMPLEMENT_SERIAL(ustinovaFavouriteTea, ustinovaTea, 1);
 
 ustinovaFavouriteTea::ustinovaFavouriteTea() {
 

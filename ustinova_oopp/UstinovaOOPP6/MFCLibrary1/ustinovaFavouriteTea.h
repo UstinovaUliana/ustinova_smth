@@ -12,6 +12,6 @@ class ustinovaFavouriteTea : public ustinovaTea
 		ustinovaFavouriteTea();
 		~ustinovaFavouriteTea();
 
-		void Serialize(CArchive& ar);
+		virtual void Serialize(CArchive& ar);
 };
 

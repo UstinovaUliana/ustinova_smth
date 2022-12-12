@@ -92,10 +92,10 @@ extern "C"
 		return collection.ukazateli.size();
 	}
 
-	_declspec(dllexport) bool __stdcall GetTypeP(int index)
+	_declspec(dllexport) bool __stdcall GetTypeP1(int index)
 	{
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
-		return collection.ukazateli[index]->IsKindOf(RUNTIME_CLASS(ustinovaTea)) != 0;
+		return static_pointer_cast<ustinovaFavouriteTea>(collection.ukazateli[index])->personal_rate;
 	}
 
 	_declspec(dllexport) void __stdcall GetTeaName(int index, char* str)
@@ -141,13 +141,13 @@ extern "C"
 	_declspec(dllexport) void __stdcall SetTeaName(int index, char* newname)
 	{
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
-		collection.ukazateli[index]->name = CString(newname);
+		collection.ukazateli[index]->name = newname;
 	}
 
 	_declspec(dllexport) void __stdcall SetTeaSort(int index, char* newsort)
 	{
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
-		collection.ukazateli[index]->name = CString(newsort);
+		collection.ukazateli[index]->sort = newsort;
 	}
 
 	_declspec(dllexport) void __stdcall SetTeaPrice(int index, int newprice)

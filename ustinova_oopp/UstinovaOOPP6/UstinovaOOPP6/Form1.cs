@@ -15,55 +15,55 @@ namespace UstinovaOOPP6
     {
         UstinovaTeaCollection collection = new UstinovaTeaCollection();
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void Add_From_File(StringBuilder path);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void Print_To_File(StringBuilder path);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void Clear();
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern int GetSize();
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
-        private static extern bool GetTypeP(int index);
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
+        private static extern bool GetTypeP1(int index);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void GetTeaName(int index, StringBuilder str);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern int GetTeaSort(int index, StringBuilder str);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern int GetTeaPrice(int index);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern int GetTeaRate(int index);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern int GetTeaPersonalRate(int index);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void CreateTea();
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void CreateFavouriteTea();
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void SetTeaName(int index, StringBuilder str);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void SetTeaSort(int index, StringBuilder str);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void SetTeaPrice(int index, int newprice);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void SetTeaRate(int index, int newrate);
 
-        [DllImport("MFC_lib.dll", CharSet = CharSet.Ansi)]
+        [DllImport("MFCLibrary1.dll", CharSet = CharSet.Ansi)]
         private static extern void SetTeaPersonalRate(int index, int newperrate);
 
 
@@ -187,7 +187,7 @@ namespace UstinovaOOPP6
         private void listBox1_SelectedValueChanged(object sender, EventArgs e)
         {
             int index = listBox1.SelectedIndex;
-
+            //(UstinovaTeaCollection.teaList[i].GetType() == typeof(UstinovaTea)
             if (collection.GetTypeP(index))
             {
                 UstinovaFavouriteTea n;
@@ -220,8 +220,8 @@ namespace UstinovaOOPP6
                 collection.Delete(index);
                 Refresh_list();
 
-                if ((index == 0) && (UstinovaTeaCollection.teaList.Count > 0))
-                    listBox1.SelectedIndex = 0;
+                if ((index < UstinovaTeaCollection.teaList.Count))
+                    listBox1.SelectedIndex = index;
                 else
                     listBox1.SelectedIndex = index - 1;
             }
@@ -259,15 +259,18 @@ namespace UstinovaOOPP6
 
                 for (int i = 0; i < count; i++)
                 {
-                    if (GetTypeP(i))
+                    if (GetTeaPersonalRate(i)<0)
                     {
                         var str = new StringBuilder(256);
                         UstinovaTea p = new UstinovaTea();
 
-                        str.Append(p.name);
+                        var str1 = new StringBuilder(256);
+                        //str.Append(p.name);
                         GetTeaName(i,str);
-                        str.Append(p.sort);
-                        GetTeaSort(i,str);
+                        p.name = str.ToString();
+                        //str.Append(p.sort);
+                        GetTeaSort(i,str1);
+                        p.sort = str1.ToString();
                         p.price = GetTeaPrice(i);
                         p.rate = GetTeaRate(i);
                         UstinovaTeaCollection.teaList.Add(p);
@@ -276,9 +279,13 @@ namespace UstinovaOOPP6
                     {
                         UstinovaFavouriteTea n = new UstinovaFavouriteTea();
                         var str = new StringBuilder(256);
-                        str.Append(n.name);
+                        var str1 = new StringBuilder(256);
+                        //  str.Append(n.name);
                         GetTeaName(i, str);
-                        str.Append(n.sort);
+                        // str.Append(n.sort);
+                        n.name = str.ToString();
+                        GetTeaSort(i, str1);
+                        n.sort = str1.ToString();
                         n.price = GetTeaPrice(i);
                         n.rate = GetTeaRate(i);
                         n.personal_rate = GetTeaPersonalRate(i);
@@ -288,7 +295,6 @@ namespace UstinovaOOPP6
 
                 Refresh_list();
                 listBox1.SelectedIndex = UstinovaTeaCollection.teaList.Count - 1;
-                MessageBox.Show("Завершено успешно");
             }
         }
 
@@ -306,10 +312,11 @@ namespace UstinovaOOPP6
                         CreateTea();
                         UstinovaTea cur_element = UstinovaTeaCollection.teaList[i] as UstinovaTea;
                         var str = new StringBuilder();
+                        var str1 = new StringBuilder();
                         str.Append(cur_element.name);
                         SetTeaName(i, str);
-                        str.Append(cur_element.sort);
-                        SetTeaSort(i, str);
+                        str1.Append(cur_element.sort);
+                        SetTeaSort(i, str1);
                         SetTeaPrice(i, cur_element.price);
                         SetTeaRate(i, cur_element.rate);
                     }
@@ -318,10 +325,11 @@ namespace UstinovaOOPP6
                         CreateFavouriteTea();
                         UstinovaFavouriteTea cur_element = UstinovaTeaCollection.teaList[i] as UstinovaFavouriteTea;
                         var str = new StringBuilder();
+                        var str1 = new StringBuilder();
                         str.Append(cur_element.name);
                         SetTeaName(i, str);
-                        str.Append(cur_element.sort);
-                        SetTeaSort(i, str);
+                        str1.Append(cur_element.sort);
+                        SetTeaSort(i, str1);
                         SetTeaPrice(i, cur_element.price);
                         SetTeaRate(i, cur_element.rate);
                         SetTeaPersonalRate(i, cur_element.personal_rate);
@@ -331,13 +339,12 @@ namespace UstinovaOOPP6
                 var name_file = new StringBuilder(saveFileDialog1.FileName);
                 Print_To_File(name_file);
                 Clear();
-                MessageBox.Show("Завершено успешно");
             }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
