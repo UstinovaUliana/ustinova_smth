@@ -346,6 +346,9 @@ public:
 	void ImportPrivateKeyInit(string pass)
 	{
 		GenExportKey(pass);
+		/*string prkfile;
+		cout << "\nВведите название файла для считывания приватного ключа: ";
+		cin >> prkfile;*/
 		ifstream in("private_key.txt", ios::binary);
 		vector v(istreambuf_iterator<char>{in}, {});
 		ImportPrivateKey(v);
